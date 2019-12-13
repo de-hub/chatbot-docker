@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    volumes:
+    - ./volumes/postgresql:/var/lib/postgresql
+    ports:
+    - "54321:5432"
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpass
+      POSTGRES_DB: chatbot
+  chatbot_dev:
+    build:
+      context: .
+      args:
+      - ENV=dev
+    command: "python manage.py runserver 0.0.0.0:8000"
+    volumes:
+    - ./chatbot:/chatbot
+    - ./volumes/log/chatbot:/var/log/chatbot
+    - ./volumes/log/gunicorn:/var/log/gunicorn
+    ports:
+    - "8000:8000"
+    environment:
+      DEBUG: "True"
+      SECRET_KEY: notverysecret
+      DATABASE: postgresql://pguser:pgpass@postgres/chatbot
+      LOG_DIR: /var/log/chatbot
+    depends_on:
+    - postgres

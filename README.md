@@ -55,3 +55,11 @@ For a development environment (with PostgreSQL) use:
 ```
 docker-compose -f docker-compose.dev.yml up
 ```
+
+As before, the usual steps to setup the database can be executed using `docker exec -it`:
+
+```
+docker exec -it chatbot-docker_chatbot_1 python manage.py migrate
+docker exec -it chatbot-docker_chatbot_1 python manage.py collectstatic
+docker exec -it chatbot-docker_chatbot_1 python manage.py createsuperuser
+```
